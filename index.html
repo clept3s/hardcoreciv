@@ -3,27 +3,747 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HardcoreCiv</title>
+    <title>HardcoreCiv – Hardcore Minecraft Server</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            background-color: #121212;
-            color: #ffffff;
-            font-family: sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            box-sizing: border-box;
         }
+
+        :root {
+            /* Light mode */
+            --primary: #FF6B35;      /* Vibrant orange-red */
+            --secondary: #E85A2A;    /* Darker orange */
+            --accent: #FFD60A;       /* Golden yellow */
+            --bg-light: #FFFFFF;     /* White background */
+            --bg-alt: #F8F9FA;       /* Light gray */
+            --text-dark: #1F2937;    /* Dark text */
+            --text-mid: #4B5563;     /* Mid gray text */
+            --text-light: #9CA3AF;   /* Light gray text */
+            --border: #E5E7EB;       /* Light border */
+            --success: #10B981;      /* Green */
+        }
+
+        /* Dark mode (default) */
+        body.dark-mode {
+            --primary: #FF6B35;      /* Vibrant orange-red */
+            --secondary: #E85A2A;    /* Darker orange */
+            --accent: #FFD60A;       /* Golden yellow */
+            --bg-light: #0D1117;     /* Deep dark */
+            --bg-alt: #161B22;       /* Dark blue-gray */
+            --text-dark: #E6ECED;    /* Light text */
+            --text-mid: #8B949E;     /* Mid gray text */
+            --text-light: #6E7681;   /* Light gray text */
+            --border: #30363D;       /* Dark border */
+            --success: #3FB950;      /* Green */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation / Header */
+        header {
+            background: var(--bg-light);
+            border-bottom: 2px solid var(--primary);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
         h1 {
-            font-size: 3rem;
-            color: #ff3333;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
+            margin: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--primary);
+            color: var(--text-dark);
+            width: 44px;
+            height: 44px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transition: all 0.25s ease;
+            font-weight: 600;
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(255, 107, 53, 0.1);
+            transform: scale(1.05);
+        }
+
+        .theme-toggle:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .hero h2 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 16px;
+            line-height: 1.1;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            opacity: 0.98;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 32px;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-size: 0.95rem;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background-color: white;
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-discord {
+            background-color: #5865F2;
+            color: white;
+        }
+
+        .btn-discord:hover {
+            background-color: #4752C4;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(88, 101, 242, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 80px 0;
+        }
+
+        .content-section {
+            margin-bottom: 80px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 12px;
+            text-shadow: 0 2px 8px rgba(255, 107, 53, 0.15);
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--text-mid);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: var(--bg-alt);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 32px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(255, 107, 53, 0.15);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 14px;
+        }
+
+        .card p {
+            color: var(--text-mid);
+            line-height: 1.7;
+            margin-bottom: 14px;
+        }
+
+        .card ul {
+            list-style: none;
+            margin-top: 16px;
+        }
+
+        .card li {
+            color: var(--text-mid);
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            line-height: 1.6;
+        }
+
+        .card li:last-child {
+            border-bottom: none;
+        }
+
+        .card strong {
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        /* Server Info Section */
+        .server-info {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 12px;
+            padding: 60px 32px;
+            text-align: center;
+            margin: 60px 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .server-info::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .server-info h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .server-info p {
+            color: rgba(255, 255, 255, 0.95);
+            position: relative;
+            z-index: 1;
+        }
+
+        .ip-box {
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px dashed var(--accent);
+            border-radius: 8px;
+            padding: 24px 32px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent);
+            display: inline-block;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+
+        .ip-box:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .copy-hint {
+            display: block;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 8px;
+            font-family: sans-serif;
+            position: relative;
+            z-index: 1;
+        }
+
+        .server-cta {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Milestone / Announcement Section */
+        .announcement {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 214, 10, 0.05) 100%);
+            border-left: 5px solid var(--primary);
+            border-radius: 8px;
+            padding: 40px;
+            margin: 40px 0;
+        }
+
+        .announcement h3 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .announcement p {
+            color: var(--text-mid);
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .announcement strong {
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--bg-alt);
+            border-top: 2px solid var(--primary);
+            padding: 60px 20px;
+            margin-top: 80px;
+            transition: all 0.3s ease;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h4 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: var(--primary);
+        }
+
+        .footer-section p {
+            color: var(--text-mid);
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .footer-section a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.2s ease;
+        }
+
+        .footer-section a:hover {
+            opacity: 0.8;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding-top: 30px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .hero {
+                padding: 60px 20px;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .header-left {
+                gap: 20px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .server-info {
+                padding: 40px 24px;
+            }
+
+            .ip-box {
+                font-size: 1.1rem;
+                padding: 16px 20px;
+            }
+
+            .hero-cta,
+            .server-cta {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .announcement {
+                padding: 24px;
+            }
+        }
+
+        /* Accessibility */
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
         }
     </style>
 </head>
-<body>
-    <h1>hardcoreciv</h1>
+<body class="dark-mode">
+
+    <!-- Header / Navigation -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1>HardcoreCiv</h1>
+                    <ul class="nav-links">
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#join">Join</a></li>
+                    </ul>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">☀️</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Hardcore Minecraft Server</h2>
+            <p>Where death has real consequences. Get banned for 1 hour and come back stronger.</p>
+            <div class="hero-cta">
+                <a href="#join" class="btn btn-primary">Get Started</a>
+                <a href="https://discord.gg/cEQ6CHKNSX" target="_blank" class="btn btn-secondary">Join Discord</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+
+            <!-- About Section -->
+            <section class="content-section" id="about">
+                <div class="section-header">
+                    <h2>How It Works</h2>
+                    <p>Understanding the core mechanic of HardcoreCiv</p>
+                </div>
+                
+                <div class="cards-grid">
+                    <div class="card">
+                        <h3>One Life Per Hour</h3>
+                        <p>Die once and you're out for 1 hour. This isn't permadeath—it's a strategic timeout that keeps the stakes high and the gameplay intense. Every decision matters.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>100% Fair Play</h3>
+                        <p>Completely free to play. No pay-to-win. No advantages for money. Every player gets the exact same tools and opportunities. Pure skill and strategy decide who thrives.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Community Built</h3>
+                        <p>Voice chat, teleports, and home commands keep players connected. Work together, build bases, and survive as a team. The server is only as strong as its community.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="content-section" id="features">
+                <div class="section-header">
+                    <h2>Server Features</h2>
+                    <p>Tools designed to enhance your hardcore survival experience</p>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="card">
+                        <h3>Proximity Voice Chat</h3>
+                        <p>Talk to nearby players in real-time. Coordinate raids, warn teammates of danger, and celebrate victories together without ever leaving the game.</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Teleport System</h3>
+                        <p>Send TPA requests to friends or use RTP to discover new lands. Meet up instantly after long journeys. Brings teammates together safely across the map.</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Home Waypoint</h3>
+                        <p>Set your personal home base and teleport back anytime. Your safe hub, your spawn point, your fortress. Never lose your way back to safety.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Server Info -->
+            <section class="server-info" id="join">
+                <h2>Join HardcoreCiv</h2>
+                <p style="margin-bottom: 20px;">Add this to your Minecraft launcher and jump into the action</p>
+                <div class="ip-box">hardcoreciv.gleeze.com</div>
+                <span class="copy-hint">Click to copy • Works on Java Edition</span>
+                <div class="server-cta">
+                    <a href="https://discord.gg/cEQ6CHKNSX" class="btn btn-discord" target="_blank">Join Our Discord</a>
+                </div>
+            </section>
+
+            <!-- Milestone Announcement -->
+            <div class="announcement">
+                <h3>The End Opening</h3>
+                <p>When HardcoreCiv reaches <strong>10 concurrent players online</strong>, the End dimension will officially open. This is your chance to be part of something special. The announcement will hit our Discord first, so make sure you're in the community. Are you ready to be there when it happens?</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>About</h4>
+                    <p>HardcoreCiv is a hardcore Minecraft server where death carries weight. Play strategically, build together, and survive the challenges that come your way.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Server</h4>
+                    <p>
+                        Address: <strong>hardcoreciv.gleeze.com</strong><br>
+                        Version: Latest<br>
+                        Status: Online 24/7
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <p>
+                        <a href="https://discord.gg/cEQ6CHKNSX" target="_blank">Discord Server</a><br>
+                        Join our active community and stay updated on all server milestones.
+                    </p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>HardcoreCiv © 2026. Not affiliated with Minecraft or Mojang Studios.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize dark mode
+        const themeToggle = document.getElementById('themeToggle');
+
+        // Check for saved theme preference or default to dark mode
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        
+        // Set initial theme
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+        } else {
+            document.body.classList.remove('dark-mode');
+            themeToggle.textContent = '🌙';
+        }
+
+        // Handle theme toggle
+        themeToggle.addEventListener('click', () => {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            
+            if (isDarkMode) {
+                document.body.classList.remove('dark-mode');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.add('dark-mode');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    </script>
+
 </body>
 </html>
